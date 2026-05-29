@@ -62,6 +62,14 @@ export default function Login() {
         }
     };
 
+    const handleForgotPassword = (e) => {
+        e.preventDefault();
+        // Add your forgot password logic here
+        console.log("Forgot password clicked");
+        // Example: navigate to forgot password page
+        // window.location.href = "/forgot-password";
+    };
+
     // Animation Variants
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -114,18 +122,7 @@ export default function Login() {
         },
     };
 
-    const iconVariants = {
-        hover: {
-            scale: 1.1,
-            rotate: 5,
-            transition: {
-                type: "spring",
-                stiffness: 300,
-                damping: 10,
-            },
-        },
-        tap: { scale: 0.95 },
-    };
+    // Removed unused iconVariants
 
     return (
         <div 
@@ -248,7 +245,7 @@ export default function Login() {
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition duration-500" />
                     
                     {/* Card Content */}
-                    <div className="relative glass-card rounded-2xl overflow-hidden">
+                    <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
                         {/* Card Header */}
                         <div className="relative bg-gradient-to-r from-indigo-600/20 to-purple-600/20 px-6 py-4 border-b border-white/10">
                             <div className="flex items-center gap-3">
@@ -365,11 +362,12 @@ export default function Login() {
                                         />
                                         <span className="text-gray-400 text-sm">Remember me</span>
                                     </label>
-                                    <p
+                                    <button
+                                        onClick={handleForgotPassword}
                                         className="text-indigo-400 hover:text-indigo-300 text-sm transition-all duration-300 hover:underline"
                                     >
                                         Forgot password?
-                                    </p>
+                                    </button>
                                 </motion.div>
 
                                 {/* Submit Button */}
@@ -455,7 +453,7 @@ export default function Login() {
                                 key={idx}
                                 whileHover={{ scale: 1.05, y: -2 }}
                                 whileTap={{ scale: 0.95 }}
-                                className={`flex-1 py-2 rounded-xl glass border border-white/10 text-gray-400 ${social.color} transition-all duration-300`}
+                                className={`flex-1 py-2 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 text-gray-400 ${social.color} transition-all duration-300`}
                             >
                                 <i className={`${social.icon} text-lg`}></i>
                             </motion.button>
@@ -475,7 +473,7 @@ export default function Login() {
                     ].map((feature, idx) => (
                         <motion.div 
                             key={idx} 
-                                            whileHover={{ y: -2 }}
+                            whileHover={{ y: -2 }}
                             className="flex items-center gap-1 text-gray-500 text-xs"
                         >
                             <i className={`${feature.icon} text-indigo-400 text-xs`}></i>

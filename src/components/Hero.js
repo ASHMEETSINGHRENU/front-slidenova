@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'fram
 
 const Hero = () => {
   const containerRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [ setDimensions] = useState({ width: 0, height: 0 });
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   

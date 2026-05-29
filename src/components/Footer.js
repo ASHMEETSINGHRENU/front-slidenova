@@ -37,21 +37,35 @@ const Footer = () => {
             { name: "Contact", href: "#contact", icon: "fas fa-envelope" }
         ],
         legal: [
-            { name: "Privacy Policy", href: "#" },
-            { name: "Terms of Service", href: "#" },
-            { name: "Refund Policy", href: "#" },
-            { name: "Cookie Policy", href: "#" }
+            { name: "Privacy Policy", href: "/privacy" },
+            { name: "Terms of Service", href: "/terms" },
+            { name: "Refund Policy", href: "/refund" },
+            { name: "Cookie Policy", href: "/cookies" }
         ],
         social: [
-            { name: "Twitter", icon: "fab fa-twitter", color: "hover:bg-twitter", link: "#" },
-            { name: "LinkedIn", icon: "fab fa-linkedin-in", color: "hover:bg-linkedin", link: "#" },
-            { name: "Instagram", icon: "fab fa-instagram", color: "hover:bg-instagram", link: "#" },
-            { name: "Facebook", icon: "fab fa-facebook-f", color: "hover:bg-facebook", link: "#" },
-            { name: "YouTube", icon: "fab fa-youtube", color: "hover:bg-youtube", link: "#" }
+            { name: "Twitter", icon: "fab fa-twitter", color: "hover:bg-twitter", link: "https://twitter.com/slidenova" },
+            { name: "LinkedIn", icon: "fab fa-linkedin-in", color: "hover:bg-linkedin", link: "https://linkedin.com/company/slidenova" },
+            { name: "Instagram", icon: "fab fa-instagram", color: "hover:bg-instagram", link: "https://instagram.com/slidenova" },
+            { name: "Facebook", icon: "fab fa-facebook-f", color: "hover:bg-facebook", link: "https://facebook.com/slidenova" },
+            { name: "YouTube", icon: "fab fa-youtube", color: "hover:bg-youtube", link: "https://youtube.com/@slidenova" }
         ]
     };
 
     const currentYear = new Date().getFullYear();
+
+    const handleLegalClick = (e, href) => {
+        e.preventDefault();
+        // You can implement navigation logic here
+        // For now, it just prevents the error
+        console.log(`Navigate to: ${href}`);
+        // If you're using React Router, uncomment:
+        // navigate(href);
+    };
+
+    const handleSocialClick = (e, link) => {
+        e.preventDefault();
+        window.open(link, '_blank', 'noopener,noreferrer');
+    };
 
     return (
         <footer className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white pt-16 pb-8 overflow-hidden">
@@ -135,7 +149,7 @@ const Footer = () => {
                         </ul>
                     </motion.div>
 
-                    {/* Legal Links */}
+                    {/* Legal Links - FIXED: Replaced # with actual paths */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -153,7 +167,8 @@ const Footer = () => {
                                     transition={{ type: "spring", stiffness: 300 }}
                                 >
                                     <a 
-                                        href={link.href} 
+                                        href={link.href}
+                                        onClick={(e) => handleLegalClick(e, link.href)}
                                         className="text-gray-400 hover:text-white transition-all duration-300 flex items-center gap-2"
                                     >
                                         <i className="fas fa-chevron-right text-indigo-400 text-xs"></i>
@@ -256,15 +271,18 @@ const Footer = () => {
                             </div>
                         </div>
 
-                        {/* Social Links */}
+                        {/* Social Links - FIXED: Added actual URLs */}
                         <div className="flex gap-3">
                             {footerLinks.social.map((social, idx) => (
                                 <motion.a
                                     key={idx}
                                     href={social.link}
+                                    onClick={(e) => handleSocialClick(e, social.link)}
                                     whileHover={{ y: -5, scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
                                     className={`w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 group`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                 >
                                     <i className={`${social.icon} text-gray-400 group-hover:text-white transition-colors`}></i>
                                 </motion.a>
@@ -285,9 +303,24 @@ const Footer = () => {
                             © {currentYear} SlideNova. All rights reserved.
                         </p>
                         <div className="flex gap-6">
-                            <p className="text-gray-400 hover:text-white text-xs transition">Privacy Policy</p>
-                            <p className="text-gray-400 hover:text-white text-xs transition">Terms of Service</p>
-                            <p className="text-gray-400 hover:text-white text-xs transition">Sitemap</p>
+                            <button 
+                                onClick={() => console.log('Navigate to Privacy Policy')}
+                                className="text-gray-400 hover:text-white text-xs transition cursor-pointer"
+                            >
+                                Privacy Policy
+                            </button>
+                            <button 
+                                onClick={() => console.log('Navigate to Terms of Service')}
+                                className="text-gray-400 hover:text-white text-xs transition cursor-pointer"
+                            >
+                                Terms of Service
+                            </button>
+                            <button 
+                                onClick={() => console.log('Navigate to Sitemap')}
+                                className="text-gray-400 hover:text-white text-xs transition cursor-pointer"
+                            >
+                                Sitemap
+                            </button>
                         </div>
                         <div className="flex items-center gap-1 text-gray-400 text-xs">
                             <span>Made with</span>

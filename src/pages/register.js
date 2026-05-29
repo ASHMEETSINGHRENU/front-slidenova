@@ -12,6 +12,7 @@ export default function Register() {
     const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [passwordStrength, setPasswordStrength] = useState(0);
+    const [termsAccepted, setTermsAccepted] = useState(false);
     const sectionRef = useRef(null);
     const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
@@ -41,6 +42,10 @@ export default function Register() {
             return setError("Password must be at least 6 characters");
         }
 
+        if (!termsAccepted) {
+            return setError("Please accept the Terms of Service and Privacy Policy");
+        }
+
         try {
             setLoading(true);
             await axios.post("https://backend-slidenova.onrender.com/api/register", data);
@@ -56,6 +61,13 @@ export default function Register() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleTermsClick = (e, type) => {
+        e.preventDefault();
+        console.log(`Navigate to ${type} page`);
+        // Add your navigation logic here
+        // window.location.href = `/${type.toLowerCase().replace(/\s+/g, '-')}`;
     };
 
     // Animation Variants
@@ -240,7 +252,7 @@ export default function Register() {
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition duration-500" />
                     
                     {/* Card Content */}
-                    <div className="relative glass-card rounded-2xl overflow-hidden">
+                    <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
                         {/* Card Header */}
                         <div className="relative bg-gradient-to-r from-indigo-600/20 to-purple-600/20 px-6 py-4 border-b border-white/10">
                             <div className="flex items-center gap-3">
@@ -384,22 +396,30 @@ export default function Register() {
                                     )}
                                 </motion.div>
 
-                                {/* Terms and Conditions */}
+                                {/* Terms and Conditions - FIXED: Replaced <p> tags with buttons */}
                                 <motion.div variants={itemVariants} className="flex items-center gap-2">
                                     <input
                                         type="checkbox"
                                         id="terms"
+                                        checked={termsAccepted}
+                                        onChange={(e) => setTermsAccepted(e.target.checked)}
                                         className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-indigo-600 focus:ring-indigo-500"
                                     />
                                     <label htmlFor="terms" className="text-gray-400 text-xs">
                                         I agree to the{" "}
-                                        <p className="text-indigo-400 hover:text-indigo-300">
+                                        <button 
+                                            onClick={(e) => handleTermsClick(e, "Terms of Service")}
+                                            className="text-indigo-400 hover:text-indigo-300 transition-colors inline-block"
+                                        >
                                             Terms of Service
-                                        </p>{" "}
+                                        </button>{" "}
                                         and{" "}
-                                        <p className="text-indigo-400 hover:text-indigo-300">
+                                        <button 
+                                            onClick={(e) => handleTermsClick(e, "Privacy Policy")}
+                                            className="text-indigo-400 hover:text-indigo-300 transition-colors inline-block"
+                                        >
                                             Privacy Policy
-                                        </p>
+                                        </button>
                                     </label>
                                 </motion.div>
 

@@ -53,10 +53,7 @@ export default function Analysis() {
     // Profit data
     const profit = revenue.map((r, i) => Math.round(r * 0.35));
     
-    // Growth rate
-    const growth = revenue.map((r, i) => i === 0 ? 0 : Math.round(((r - revenue[i-1]) / revenue[i-1]) * 100));
-    
-    return { revenue, orders, profit, growth, months, currentMonthIndex };
+    return { revenue, orders, profit, months, currentMonthIndex };
   };
 
   const data = generateData();
@@ -422,7 +419,7 @@ export default function Analysis() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Animation Variants
+  // Animation Variants - Removed itemVariants since it wasn't used
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

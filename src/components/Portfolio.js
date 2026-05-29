@@ -12,7 +12,7 @@ const Portfolio = () => {
   const [activeTab, setActiveTab] = useState('samples');
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [hoveredCard, setHoveredCard] = useState(null);
+  // Removed unused hoveredCard state
   const sectionRef = useRef(null);
 
   // Prevent body scroll when modal is open
@@ -85,18 +85,7 @@ const Portfolio = () => {
     setSelectedImage(null);
   };
 
-  // Animation variants
-  const sectionVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
-  };
-
+  // Animation variants - Removed unused sectionVariants
   const headerVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -192,7 +181,7 @@ const Portfolio = () => {
               className={`px-6 py-2.5 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25'
-                  : 'glass text-gray-300 hover:text-white border border-white/10'
+                  : 'bg-white/5 backdrop-blur-sm text-gray-300 hover:text-white border border-white/10'
               }`}
             >
               <i className={tab.icon}></i>
@@ -223,7 +212,7 @@ const Portfolio = () => {
                   onClick={() => openModal(sample.image)}
                   className="group cursor-pointer"
                 >
-                  <div className="relative glass-card overflow-hidden rounded-xl transition-all duration-300">
+                  <div className="relative bg-white/5 backdrop-blur-sm overflow-hidden rounded-xl transition-all duration-300 border border-white/10">
                     {/* Image Container */}
                     <div className="relative overflow-hidden h-52">
                       <motion.img
@@ -300,7 +289,7 @@ const Portfolio = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ delay: idx * 0.15, duration: 0.5 }}
-                  className="glass-card rounded-2xl overflow-hidden shadow-xl"
+                  className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl border border-white/10"
                 >
                   {/* Header */}
                   <div className="p-5 bg-gradient-to-r from-indigo-950/50 to-purple-950/50 border-b border-white/10">
@@ -398,7 +387,7 @@ const Portfolio = () => {
           )}
         </AnimatePresence>
 
-        {/* Bottom CTA */}
+        {/* Bottom CTA - Fixed anchor tag */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -406,15 +395,20 @@ const Portfolio = () => {
           transition={{ delay: 0.3, duration: 0.5 }}
           className="mt-12 text-center"
         >
-          <motion.a
-            href="#order-form"
+          <motion.button
+            onClick={() => {
+              const orderForm = document.getElementById('order-form');
+              if (orderForm) {
+                orderForm.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full glass text-white font-semibold hover:bg-white/10 transition-all duration-300 border border-white/10"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-white/5 backdrop-blur-sm text-white font-semibold hover:bg-white/10 transition-all duration-300 border border-white/10"
           >
             Ready to create your stunning presentation?
             <i className="fas fa-arrow-right"></i>
-          </motion.a>
+          </motion.button>
         </motion.div>
       </div>
 
