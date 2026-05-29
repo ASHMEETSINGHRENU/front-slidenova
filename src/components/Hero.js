@@ -1,10 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 
 const Hero = () => {
   const containerRef = useRef(null);
-  // Fixed: Properly destructure useState
-  const [, setDimensions] = useState({ width: 0, height: 0 });
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
@@ -22,7 +20,6 @@ const Hero = () => {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   useEffect(() => {
-    // Removed unused dimensions update to eliminate the dependency warning
     const handleMouseMove = (e) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
