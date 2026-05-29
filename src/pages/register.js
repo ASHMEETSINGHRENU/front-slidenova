@@ -79,7 +79,7 @@ export default function Register() {
         alert("Registration Successful!");
 
         // Redirect to login
-        window.location.href = "/login";
+        window.location.href = "/";
 
     } catch (err) {
         console.error("Registration Error:", err);
