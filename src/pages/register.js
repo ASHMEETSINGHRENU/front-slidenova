@@ -16,9 +16,6 @@ export default function Register() {
     const sectionRef = useRef(null);
     const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-    // Backend URL - Make sure this is correct
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "https://backend-slidenova.onrender.com";
-
     // Password strength checker
     useEffect(() => {
         let strength = 0;
@@ -32,21 +29,6 @@ export default function Register() {
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
         setError("");
-    };
-
-    // Test backend connection first
-    const testBackendConnection = async () => {
-        try {
-            console.log("Testing connection to:", `${BACKEND_URL}/health`);
-            const response = await axios.get(`${BACKEND_URL}/health`, {
-                timeout: 5000
-            });
-            console.log("Backend connection successful:", response.data);
-            return true;
-        } catch (err) {
-            console.error("Backend connection failed:", err.message);
-            return false;
-        }
     };
 
     const handleSubmit = async () => {
@@ -73,113 +55,67 @@ export default function Register() {
             return setError("Please accept the Terms of Service and Privacy Policy");
         }
 
-        // Test connection first
-        setLoading(true);
-        setError("Testing connection to server...");
-        
-        const isConnected = await testBackendConnection();
-        if (!isConnected) {
-            setError("Cannot connect to server. Please check if backend is running. Using demo mode for now.");
-            setLoading(false);
-            // Optional: Continue with demo registration
-            // demoRegistration();
-            return;
-        }
-
         try {
-            setError("Connecting to server...");
+            setLoading(true);
             
+            // Make sure the data matches what backend expects
             const userData = {
                 username: data.username.trim(),
                 email: data.email.trim().toLowerCase(),
                 password: data.password
             };
             
-            console.log("Sending registration request to:", `${BACKEND_URL}/register`);
-            console.log("Request data:", { ...userData, password: "***" });
+            console.log("Sending registration request to backend...", userData);
             
             const response = await axios.post(
-                `${BACKEND_URL}/register`, 
+                "https://backend-slidenova.onrender.com/auth/register", 
                 userData,
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
                     },
-                    timeout: 15000,
-                    withCredentials: false // Change to true if backend supports credentials
+                    timeout: 10000 
                 }
             );
             
             console.log("Registration successful:", response.data);
-            setError("");
             
-            // Show success message
-            alert("Registration successful! Redirecting to login...");
+           
+            setError("");
             setTimeout(() => {
                 window.location.href = "/login";
             }, 1500);
             
         } catch (err) {
-            console.error("Full error details:", err);
-            console.error("Error config:", err.config);
-            console.error("Error response:", err.response);
-            console.error("Error request:", err.request);
+            console.error("Registration error details:", err);
             
             // Detailed error handling
             if (err.code === 'ECONNABORTED') {
-                setError("Connection timeout. Server might be slow or offline. Please try again.");
-            } else if (err.code === 'ERR_NETWORK') {
-                setError("Cannot reach server. Please check:\n" +
-                        "1. Backend is running on Render.com\n" +
-                        "2. No firewall blocking the connection\n" +
-                        "3. Backend URL is correct: " + BACKEND_URL);
+                setError("Request timeout. Please try again.");
             } else if (err.response) {
-                // Server responded with error status
-                const status = err.response.status;
-                const errorMessage = err.response.data?.message || err.response.data?.error || "Server error";
-                
-                if (status === 400) {
-                    setError("Invalid data: " + errorMessage);
-                } else if (status === 409) {
-                    setError("User already exists. Please use different email or username.");
-                } else if (status === 500) {
-                    setError("Server error. Please try again later.");
-                } else {
-                    setError(`Error ${status}: ${errorMessage}`);
-                }
+                // Server responded with error
+                console.error("Error response:", err.response.data);
+                const errorMessage = err.response.data?.message || 
+                                   err.response.data?.error || 
+                                   `Server error: ${err.response.status}`;
+                setError(errorMessage);
             } else if (err.request) {
                 // Request was made but no response
-                setError("No response from server. Backend might be down. Please try:\n" +
-                        "1. Waiting a few minutes\n" +
-                        "2. Checking backend status on Render.com\n" +
-                        "3. Contacting support");
+                console.error("No response from server");
+                setError("Cannot connect to server. Please check if backend is running.");
             } else {
-                setError("Registration failed: " + (err.message || "Unknown error"));
+                // Something else happened
+                setError(err.message || "Registration failed. Please try again.");
             }
         } finally {
             setLoading(false);
         }
     };
 
-    // Optional: Demo registration for testing
-    const demoRegistration = () => {
-        // Store demo user data locally
-        const demoUser = {
-            username: data.username || "demo_user",
-            email: data.email || "demo@example.com",
-            isDemo: true
-        };
-        localStorage.setItem("demoUser", JSON.stringify(demoUser));
-        alert("Demo mode: Account created locally. Backend connection will be restored later.");
-        setTimeout(() => {
-            window.location.href = "/home";
-        }, 1500);
-    };
-
     const handleTermsClick = (e, type) => {
         e.preventDefault();
         console.log(`Navigate to ${type} page`);
+        // Add navigation logic when you have those routes
     };
 
     // Animation Variants
@@ -296,6 +232,34 @@ export default function Register() {
                 }} />
             </div>
 
+            {/* Floating Particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {[...Array(40)].map((_, i) => (
+                    <motion.div
+                        key={i}
+                        className="absolute w-1 h-1 bg-white rounded-full"
+                        initial={{
+                            x: Math.random() * window.innerWidth,
+                            y: Math.random() * window.innerHeight,
+                            opacity: Math.random() * 0.5,
+                        }}
+                        animate={{
+                            y: [null, -150],
+                            opacity: [0, 1, 0],
+                        }}
+                        transition={{
+                            duration: 3 + Math.random() * 5,
+                            repeat: Infinity,
+                            delay: Math.random() * 8,
+                            ease: "linear",
+                        }}
+                        style={{
+                            left: `${Math.random() * 100}%`,
+                        }}
+                    />
+                ))}
+            </div>
+
             {/* Main Container */}
             <motion.div
                 variants={containerVariants}
@@ -352,9 +316,9 @@ export default function Register() {
                                         transition={{ duration: 0.3 }}
                                         className="mb-5 p-3 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-sm"
                                     >
-                                        <div className="flex items-start gap-2">
-                                            <i className="fas fa-exclamation-circle text-red-400 text-sm mt-0.5"></i>
-                                            <p className="text-red-400 text-sm flex-1 whitespace-pre-line">{error}</p>
+                                        <div className="flex items-center gap-2">
+                                            <i className="fas fa-exclamation-circle text-red-400 text-sm"></i>
+                                            <p className="text-red-400 text-sm flex-1">{error}</p>
                                             <button 
                                                 onClick={() => setError("")} 
                                                 className="text-red-400 hover:text-red-300 transition"
@@ -372,11 +336,11 @@ export default function Register() {
                                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                                        className="mb-5 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 backdrop-blur-sm"
+                                        className="mb-5 p-3 rounded-xl bg-green-500/10 border border-green-500/20 backdrop-blur-sm"
                                     >
                                         <div className="flex items-center gap-2">
-                                            <i className="fas fa-spinner fa-spin text-blue-400 text-sm"></i>
-                                            <p className="text-blue-400 text-sm">{error || "Creating your account..."}</p>
+                                            <i className="fas fa-spinner fa-spin text-green-400 text-sm"></i>
+                                            <p className="text-green-400 text-sm">Creating your account...</p>
                                         </div>
                                     </motion.div>
                                 )}
@@ -393,7 +357,7 @@ export default function Register() {
                                         <input
                                             type="text"
                                             name="username"
-                                            placeholder="Choose a username (min 3 characters)"
+                                            placeholder="Choose a username"
                                             value={data.username}
                                             onChange={handleChange}
                                             className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
@@ -459,6 +423,9 @@ export default function Register() {
                                             </div>
                                             <p className={`text-xs ${getStrengthColor().replace("bg-", "text-")}`}>
                                                 Password strength: {getStrengthText()}
+                                            </p>
+                                            <p className="text-gray-500 text-xs mt-1">
+                                                Use at least 6 characters with letters and numbers
                                             </p>
                                         </div>
                                     )}
