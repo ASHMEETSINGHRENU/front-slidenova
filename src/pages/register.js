@@ -68,7 +68,7 @@ export default function Register() {
             console.log("Sending registration request to backend...", userData);
             
             const response = await axios.post(
-                "https://backend-slidenova.onrender.com/auth/register", 
+                 "https://backend-slidenova.onrender.com/api/register", 
                 userData,
                 {
                     headers: {
