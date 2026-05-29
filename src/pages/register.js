@@ -34,8 +34,17 @@ export default function Register() {
     const handleSubmit = async () => {
         setError("");
         
+        // Validation
         if (!data.username || !data.email || !data.password) {
             return setError("All fields are required");
+        }
+
+        if (data.username.length < 3) {
+            return setError("Username must be at least 3 characters");
+        }
+
+        if (!data.email.includes('@') || !data.email.includes('.')) {
+            return setError("Please enter a valid email address");
         }
 
         if (data.password.length < 6) {
@@ -48,16 +57,56 @@ export default function Register() {
 
         try {
             setLoading(true);
-            await axios.post("https://backend-slidenova.onrender.com/api/register", data);
+            
+            // Make sure the data matches what backend expects
+            const userData = {
+                username: data.username.trim(),
+                email: data.email.trim().toLowerCase(),
+                password: data.password
+            };
+            
+            console.log("Sending registration request to backend...", userData);
+            
+            const response = await axios.post(
+                "https://backend-slidenova.onrender.com/api/auth/register", 
+                userData,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    timeout: 10000 // 10 second timeout
+                }
+            );
+            
+            console.log("Registration successful:", response.data);
             
             // Show success message before redirect
             setError("");
             setTimeout(() => {
-                window.location.href = "/";
+                window.location.href = "/login";
             }, 1500);
+            
         } catch (err) {
-            console.error(err);
-            setError(err.response?.data?.message || "Registration failed. Try again.");
+            console.error("Registration error details:", err);
+            
+            // Detailed error handling
+            if (err.code === 'ECONNABORTED') {
+                setError("Request timeout. Please try again.");
+            } else if (err.response) {
+                // Server responded with error
+                console.error("Error response:", err.response.data);
+                const errorMessage = err.response.data?.message || 
+                                   err.response.data?.error || 
+                                   `Server error: ${err.response.status}`;
+                setError(errorMessage);
+            } else if (err.request) {
+                // Request was made but no response
+                console.error("No response from server");
+                setError("Cannot connect to server. Please check if backend is running.");
+            } else {
+                // Something else happened
+                setError(err.message || "Registration failed. Please try again.");
+            }
         } finally {
             setLoading(false);
         }
@@ -66,8 +115,7 @@ export default function Register() {
     const handleTermsClick = (e, type) => {
         e.preventDefault();
         console.log(`Navigate to ${type} page`);
-        // Add your navigation logic here
-        // window.location.href = `/${type.toLowerCase().replace(/\s+/g, '-')}`;
+        // Add navigation logic when you have those routes
     };
 
     // Animation Variants
@@ -148,7 +196,6 @@ export default function Register() {
         >
             {/* Animated Background Effects */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {/* Floating Gradient Orbs */}
                 <motion.div
                     variants={floatVariants}
                     initial="initial"
@@ -170,7 +217,6 @@ export default function Register() {
                     className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-pink-600/10 rounded-full blur-3xl"
                 />
                 
-                {/* Animated Grid Pattern */}
                 <div 
                     className="absolute inset-0 opacity-[0.03]"
                     style={{
@@ -180,7 +226,6 @@ export default function Register() {
                     }}
                 />
                 
-                {/* Noise Texture */}
                 <div className="absolute inset-0 opacity-5" style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
                     backgroundRepeat: 'repeat',
@@ -248,12 +293,9 @@ export default function Register() {
                     variants={cardVariants}
                     className="relative group"
                 >
-                    {/* Animated Glow Border */}
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition duration-500" />
                     
-                    {/* Card Content */}
                     <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
-                        {/* Card Header */}
                         <div className="relative bg-gradient-to-r from-indigo-600/20 to-purple-600/20 px-6 py-4 border-b border-white/10">
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center">
@@ -261,14 +303,10 @@ export default function Register() {
                                 </div>
                                 <h3 className="text-white font-semibold">Registration Form</h3>
                             </div>
-                            
-                            {/* Decorative Line */}
                             <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
                         </div>
 
-                        {/* Card Body */}
                         <div className="p-6">
-                            {/* Error Message */}
                             <AnimatePresence>
                                 {error && (
                                     <motion.div
@@ -292,7 +330,6 @@ export default function Register() {
                                 )}
                             </AnimatePresence>
 
-                            {/* Success Message while redirecting */}
                             <AnimatePresence>
                                 {loading && !error && (
                                     <motion.div
@@ -302,16 +339,14 @@ export default function Register() {
                                         className="mb-5 p-3 rounded-xl bg-green-500/10 border border-green-500/20 backdrop-blur-sm"
                                     >
                                         <div className="flex items-center gap-2">
-                                            <i className="fas fa-check-circle text-green-400 text-sm"></i>
-                                            <p className="text-green-400 text-sm">Registration successful! Redirecting to login...</p>
+                                            <i className="fas fa-spinner fa-spin text-green-400 text-sm"></i>
+                                            <p className="text-green-400 text-sm">Creating your account...</p>
                                         </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
 
-                            {/* Form Fields */}
                             <div className="space-y-4">
-                                {/* Username Field */}
                                 <motion.div variants={itemVariants}>
                                     <label className="block text-gray-300 text-sm font-medium mb-2">
                                         <i className="fas fa-user mr-2 text-indigo-400"></i>
@@ -330,7 +365,6 @@ export default function Register() {
                                     </div>
                                 </motion.div>
 
-                                {/* Email Field */}
                                 <motion.div variants={itemVariants}>
                                     <label className="block text-gray-300 text-sm font-medium mb-2">
                                         <i className="fas fa-envelope mr-2 text-indigo-400"></i>
@@ -349,7 +383,6 @@ export default function Register() {
                                     </div>
                                 </motion.div>
 
-                                {/* Password Field */}
                                 <motion.div variants={itemVariants}>
                                     <label className="block text-gray-300 text-sm font-medium mb-2">
                                         <i className="fas fa-lock mr-2 text-indigo-400"></i>
@@ -360,7 +393,7 @@ export default function Register() {
                                         <input
                                             type={showPassword ? "text" : "password"}
                                             name="password"
-                                            placeholder="Create a password"
+                                            placeholder="Create a password (min 6 characters)"
                                             value={data.password}
                                             onChange={handleChange}
                                             className="w-full pl-10 pr-12 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
@@ -374,7 +407,6 @@ export default function Register() {
                                         </button>
                                     </div>
                                     
-                                    {/* Password Strength Indicator */}
                                     {data.password.length > 0 && (
                                         <div className="mt-2">
                                             <div className="flex gap-1 mb-1">
@@ -392,11 +424,13 @@ export default function Register() {
                                             <p className={`text-xs ${getStrengthColor().replace("bg-", "text-")}`}>
                                                 Password strength: {getStrengthText()}
                                             </p>
+                                            <p className="text-gray-500 text-xs mt-1">
+                                                Use at least 6 characters with letters and numbers
+                                            </p>
                                         </div>
                                     )}
                                 </motion.div>
 
-                                {/* Terms and Conditions - FIXED: Replaced <p> tags with buttons */}
                                 <motion.div variants={itemVariants} className="flex items-center gap-2">
                                     <input
                                         type="checkbox"
@@ -423,7 +457,6 @@ export default function Register() {
                                     </label>
                                 </motion.div>
 
-                                {/* Submit Button */}
                                 <motion.div variants={itemVariants} className="pt-2">
                                     <motion.button
                                         whileHover={{ scale: 1.02 }}
@@ -454,7 +487,6 @@ export default function Register() {
                     </div>
                 </motion.div>
 
-                {/* Footer Links */}
                 <motion.div
                     variants={itemVariants}
                     className="mt-8 text-center"
@@ -462,7 +494,7 @@ export default function Register() {
                     <p className="text-gray-400 text-sm">
                         Already have an account?{" "}
                         <a 
-                            href="/" 
+                            href="/login" 
                             className="text-indigo-400 font-semibold hover:text-indigo-300 transition-all duration-300 inline-flex items-center gap-1 group"
                         >
                             Sign In
@@ -471,7 +503,6 @@ export default function Register() {
                     </p>
                 </motion.div>
 
-                {/* Features Section */}
                 <motion.div
                     variants={itemVariants}
                     className="mt-8 flex justify-center gap-4 flex-wrap"
