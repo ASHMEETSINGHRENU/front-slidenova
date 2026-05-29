@@ -3,7 +3,8 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'fram
 
 const Hero = () => {
   const containerRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  // Fixed: Properly destructure useState
+  const [, setDimensions] = useState({ width: 0, height: 0 });
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
@@ -21,16 +22,7 @@ const Hero = () => {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   useEffect(() => {
-    const updateDimensions = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
-    };
-    
-    updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    
+    // Removed unused dimensions update to eliminate the dependency warning
     const handleMouseMove = (e) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -39,10 +31,9 @@ const Hero = () => {
     window.addEventListener('mousemove', handleMouseMove);
     
     return () => {
-      window.removeEventListener('resize', updateDimensions);
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [mouseX, mouseY, setDimensions]); // ✅ Fixed: Added setDimensions to dependencies
+  }, [mouseX, mouseY]); // Only depends on mouseX and mouseY
 
   // Glowing orbs with fixed positions
   const orbs = [
@@ -254,7 +245,7 @@ const Hero = () => {
             ))}
           </motion.div>
 
-          {/* CTA Buttons - Fixed anchor tags with proper href */}
+          {/* CTA Buttons */}
           <motion.div
             variants={itemVariants}
             className="flex flex-wrap justify-center gap-5"
