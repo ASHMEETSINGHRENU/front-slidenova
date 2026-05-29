@@ -32,14 +32,14 @@ const Navbar = ({ scrolled, logout, user: propUser }) => {
 
             // Set profile image if exists
             if (parsedUser.photo) {
-                setProfileImage(`http://localhost:5000/uploads/${parsedUser.photo}`);
+                setProfileImage(`https://backend-slidenova.onrender.com/uploads/${parsedUser.photo}`);
             }
         } else if (propUser) {
 
             setUser(propUser);
 
             if (propUser.photo) {
-                setProfileImage(`http://localhost:5000/uploads/${propUser.photo}`);
+                setProfileImage(`https://backend-slidenova.onrender.com/uploads/${propUser.photo}`);
             }
         }
 

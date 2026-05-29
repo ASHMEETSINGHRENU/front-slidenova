@@ -43,7 +43,7 @@ export default function Register() {
 
         try {
             setLoading(true);
-            await axios.post("http://localhost:5000/api/register", data);
+            await axios.post("https://backend-slidenova.onrender.com/api/register", data);
             
             // Show success message before redirect
             setError("");
@@ -393,11 +393,11 @@ export default function Register() {
                                     />
                                     <label htmlFor="terms" className="text-gray-400 text-xs">
                                         I agree to the{" "}
-                                        <a href="#" className="text-indigo-400 hover:text-indigo-300">
+                                        <a href="" className="text-indigo-400 hover:text-indigo-300">
                                             Terms of Service
                                         </a>{" "}
                                         and{" "}
-                                        <a href="#" className="text-indigo-400 hover:text-indigo-300">
+                                        <a href="" className="text-indigo-400 hover:text-indigo-300">
                                             Privacy Policy
                                         </a>
                                     </label>

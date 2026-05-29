@@ -34,7 +34,7 @@ export default function Login() {
 
         try {
             setLoading(true);
-            const res = await axios.post("http://localhost:5000/api/login", data);
+            const res = await axios.post("https://backend-slidenova.onrender.com/api/login", data);
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("user", JSON.stringify(res.data.user));
             
@@ -366,7 +366,7 @@ export default function Login() {
                                         <span className="text-gray-400 text-sm">Remember me</span>
                                     </label>
                                     <a 
-                                        href="#" 
+                                        href="" 
                                         className="text-indigo-400 hover:text-indigo-300 text-sm transition-all duration-300 hover:underline"
                                     >
                                         Forgot password?

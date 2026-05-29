@@ -94,7 +94,7 @@ export default function Form() {
         
         setLoading(true);
         try {
-            await axios.post("http://localhost:5000/api/form", form);
+            await axios.post("https://backend-slidenova.onrender.com/api/form", form);
             setSuccess(true);
             
             // Show alert message

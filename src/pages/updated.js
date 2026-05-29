@@ -33,12 +33,12 @@ export default function Update() {
                         photo: null
                     });
                     if (localUser.photo) {
-                        setPreview(`http://localhost:5000/uploads/${localUser.photo}`);
+                        setPreview(`https://backend-slidenova.onrender.com/uploads/${localUser.photo}`);
                     }
                 }
 
                 // Sync with backend
-                const res = await axios.get("http://localhost:5000/api/profile", {
+                const res = await axios.get("https://backend-slidenova.onrender.com/api/profile", {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -52,7 +52,7 @@ export default function Update() {
                 });
 
                 if (res.data.photo) {
-                    setPreview(`http://localhost:5000/uploads/${res.data.photo}`);
+                    setPreview(`https://backend-slidenova.onrender.com/uploads/${res.data.photo}`);
                 }
 
             } catch (err) {
@@ -89,7 +89,7 @@ export default function Update() {
             if (form.photo) data.append("photo", form.photo);
 
             const res = await axios.put(
-                "http://localhost:5000/api/update",
+                "https://backend-slidenova.onrender.com/api/update",
                 data,
                 {
                     headers: {

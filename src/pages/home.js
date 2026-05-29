@@ -62,12 +62,11 @@ export default function Home() {
 
     // Redirect to login
     const redirectToLogin = () => {
-        window.location.href = "http://localhost:3000/";
+        window.location.href = "https://backend-slidenova.onrender.com";
     };
-
     // Redirect to register
     const redirectToRegister = () => {
-        window.location.href = "http://localhost:3000/register";
+        window.location.href = "https://backend-slidenova.onrender.com/register";
     };
 
     // Page transition variants
