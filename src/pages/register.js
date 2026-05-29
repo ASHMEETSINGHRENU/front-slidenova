@@ -393,13 +393,13 @@ export default function Register() {
                                     />
                                     <label htmlFor="terms" className="text-gray-400 text-xs">
                                         I agree to the{" "}
-                                        <a href="" className="text-indigo-400 hover:text-indigo-300">
+                                        <p className="text-indigo-400 hover:text-indigo-300">
                                             Terms of Service
-                                        </a>{" "}
+                                        </p>{" "}
                                         and{" "}
-                                        <a href="" className="text-indigo-400 hover:text-indigo-300">
+                                        <p className="text-indigo-400 hover:text-indigo-300">
                                             Privacy Policy
-                                        </a>
+                                        </p>
                                     </label>
                                 </motion.div>
 

@@ -285,9 +285,9 @@ const Footer = () => {
                             © {currentYear} SlideNova. All rights reserved.
                         </p>
                         <div className="flex gap-6">
-                            <a href="" className="text-gray-400 hover:text-white text-xs transition">Privacy Policy</a>
-                            <a href="" className="text-gray-400 hover:text-white text-xs transition">Terms of Service</a>
-                            <a href="" className="text-gray-400 hover:text-white text-xs transition">Sitemap</a>
+                            <p className="text-gray-400 hover:text-white text-xs transition">Privacy Policy</p>
+                            <p className="text-gray-400 hover:text-white text-xs transition">Terms of Service</p>
+                            <p className="text-gray-400 hover:text-white text-xs transition">Sitemap</p>
                         </div>
                         <div className="flex items-center gap-1 text-gray-400 text-xs">
                             <span>Made with</span>

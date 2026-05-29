@@ -365,12 +365,11 @@ export default function Login() {
                                         />
                                         <span className="text-gray-400 text-sm">Remember me</span>
                                     </label>
-                                    <a 
-                                        href="" 
+                                    <p
                                         className="text-indigo-400 hover:text-indigo-300 text-sm transition-all duration-300 hover:underline"
                                     >
                                         Forgot password?
-                                    </a>
+                                    </p>
                                 </motion.div>
 
                                 {/* Submit Button */}
