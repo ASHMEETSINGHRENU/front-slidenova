@@ -31,86 +31,78 @@ export default function Register() {
         setError("");
     };
 
-    const handleSubmit = async () => {
-        setError("");
-        
-        // Validation
-        if (!data.username || !data.email || !data.password) {
-            return setError("All fields are required");
-        }
+  const handleSubmit = async () => {
+    setError("");
 
-        if (data.username.length < 3) {
-            return setError("Username must be at least 3 characters");
-        }
+    // Validation
+    if (!data.username || !data.email || !data.password) {
+        return setError("All fields are required");
+    }
 
-        if (!data.email.includes('@') || !data.email.includes('.')) {
-            return setError("Please enter a valid email address");
-        }
+    if (data.username.length < 3) {
+        return setError("Username must be at least 3 characters");
+    }
 
-        if (data.password.length < 6) {
-            return setError("Password must be at least 6 characters");
-        }
+    if (!data.email.includes("@") || !data.email.includes(".")) {
+        return setError("Please enter a valid email address");
+    }
 
-        if (!termsAccepted) {
-            return setError("Please accept the Terms of Service and Privacy Policy");
-        }
+    if (data.password.length < 6) {
+        return setError("Password must be at least 6 characters");
+    }
 
-        try {
-            setLoading(true);
-            
-            // Make sure the data matches what backend expects
-            const userData = {
-                username: data.username.trim(),
-                email: data.email.trim().toLowerCase(),
-                password: data.password
-            };
-            
-            console.log("Sending registration request to backend...", userData);
-            
-            const response = await axios.post(
-                 "https://backend-slidenova.onrender.com/api/register", 
-                userData,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    timeout: 10000 
-                }
-            );
-            
-            console.log("Registration successful:", response.data);
-            
-           
-            setError("");
-            setTimeout(() => {
-                window.location.href = "/login";
-            }, 1500);
-            
-        } catch (err) {
-            console.error("Registration error details:", err);
-            
-            // Detailed error handling
-            if (err.code === 'ECONNABORTED') {
-                setError("Request timeout. Please try again.");
-            } else if (err.response) {
-                // Server responded with error
-                console.error("Error response:", err.response.data);
-                const errorMessage = err.response.data?.message || 
-                                   err.response.data?.error || 
-                                   `Server error: ${err.response.status}`;
-                setError(errorMessage);
-            } else if (err.request) {
-                // Request was made but no response
-                console.error("No response from server");
-                setError("Cannot connect to server. Please check if backend is running.");
-            } else {
-                // Something else happened
-                setError(err.message || "Registration failed. Please try again.");
+    if (!termsAccepted) {
+        return setError("Please accept Terms & Conditions");
+    }
+
+    try {
+        setLoading(true);
+
+        const userData = {
+            username: data.username.trim(),
+            email: data.email.trim().toLowerCase(),
+            password: data.password,
+        };
+
+        const response = await axios.post(
+            "https://backend-slidenova.onrender.com/api/register",
+            userData,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
             }
-        } finally {
-            setLoading(false);
+        );
+
+        console.log("Registration Success:", response.data);
+
+        alert("Registration Successful!");
+
+        // Redirect to login
+        window.location.href = "/login";
+
+    } catch (err) {
+        console.error("Registration Error:", err);
+
+        if (err.response) {
+            // Backend returned error
+            setError(
+                err.response.data?.message ||
+                err.response.data?.error ||
+                "Registration failed"
+            );
+        } else if (err.request) {
+            // No response from backend
+            setError("Server not responding. Please try again later.");
+        } else {
+            // Other errors
+            setError("Something went wrong.");
         }
-    };
+
+    } finally {
+        setLoading(false);
+    }
+};
 
     const handleTermsClick = (e, type) => {
         e.preventDefault();
