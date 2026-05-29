@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'fram
 
 const Hero = () => {
   const containerRef = useRef(null);
-  const [ setDimensions] = useState({ width: 0, height: 0 });
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
@@ -42,7 +42,7 @@ const Hero = () => {
       window.removeEventListener('resize', updateDimensions);
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, setDimensions]); // ✅ Fixed: Added setDimensions to dependencies
 
   // Glowing orbs with fixed positions
   const orbs = [
@@ -254,7 +254,7 @@ const Hero = () => {
             ))}
           </motion.div>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons - Fixed anchor tags with proper href */}
           <motion.div
             variants={itemVariants}
             className="flex flex-wrap justify-center gap-5"
@@ -263,7 +263,7 @@ const Hero = () => {
               href="#order-form"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              className="relative px-10 py-4 rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-semibold text-lg overflow-hidden group shadow-2xl"
+              className="relative px-10 py-4 rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-semibold text-lg overflow-hidden group shadow-2xl inline-flex items-center gap-2"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Order Now 
