@@ -130,12 +130,6 @@ const Navbar = ({ scrolled, logout, user: propUser }) => {
         { icon: 'fa-shopping-bag', label: 'My Orders', href: '/my-orders' },
     ], []);
 
-    // Mobile menu items
-    const mobileMenuItems = useMemo(() => [
-        ...navLinks,
-        ...userMenuItems,
-    ], [navLinks, userMenuItems]);
-
     return (
         <>
             <motion.nav
